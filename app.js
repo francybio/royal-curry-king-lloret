@@ -4,6 +4,8 @@
    cursor, tiffin de acero que se monta piso a piso con la
    cuenta, carta con la tabla de curris, galería de arcos.
    Carta y precios: su tienda en Glovo (octubre de 2026).
+   Textos en 6 idiomas con site.js (RCK.t / RCK.tr): los datos
+   de la carta siguen en castellano y se traducen al pintarlos.
    ========================================================== */
 (() => {
 'use strict';
@@ -16,7 +18,11 @@ const hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigge
 const motion = hasGSAP && !reduced;
 if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-const eur = (n) => n.toFixed(2).replace('.', ',') + ' €';
+const R = window.RCK || { t: (k) => k, tr: (s) => s, money: (n) => n.toFixed(2).replace('.', ',') + ' €', lang: 'es' };
+const t = (k, v) => R.t(k, v), tr = (x) => R.tr(x);
+const eur = (n) => R.money(n);
+const CURRY = (window.RCK_CARTA || {}).curry || {};
+const cfg = () => CURRY[R.lang] || CURRY.es;
 const IMG = (f) => 'assets/img/' + f;
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -40,7 +46,6 @@ const SAUCES = [
   { n: 'Madras', d: 'Al estilo madrás, picante', p: [12.9, 14.9, 14.9], c: '#B12F22', t: ['hot'] },
   { n: 'Vindaloo', d: 'Al estilo de Goa, muy picante', p: [14.9, 16.9, 16.9], c: '#8E1F17', t: ['fire'] }
 ];
-const PROTS = ['Pollo', 'Cordero', 'Gambas'];
 const VEG = [
   { n: 'Saag paneer', d: 'Espinacas y paneer (queso indio) en salsa cremosa con especias', p: 14.9, c: '#5E8A3A', t: ['veg', 'cream'] },
   { n: 'Shahi paneer', d: 'Paneer, salsa cremosa de tomate y nata', p: 13.9, c: '#E39A55', t: ['veg', 'cream'] },
@@ -158,7 +163,7 @@ const madridMin = () => {
 };
 const paintLive = () => {
   const m = madridMin(), open = m >= 630 || m < 60;
-  const txt = open ? 'Abierto · hasta la 1:00' : 'Cerrado · abrimos a las 10:30';
+  const txt = t(open ? 'live.open' : 'live.closed');
   $$('[data-live]').forEach((el) => { el.classList.toggle('is-open', open); el.classList.toggle('is-closed', !open); $('[data-live-text]', el).textContent = txt; });
 };
 paintLive(); setInterval(paintLive, 30000);
@@ -285,43 +290,48 @@ if (motion) gsap.to('#heroRing', { rotate: 360, duration: 120, repeat: -1, ease:
 /* ----------------------------------------------------------
    MONTA TU TIFFIN
    ---------------------------------------------------------- */
-const tf = { starter: null, prot: 0, curry: null, side: 'Arroz basmati', extra: null, sweet: null, step: 1 };
+const tf = { starter: null, prot: 0, curry: null, side: 'rice', extra: null, sweet: null, step: 1 };
 const STEPS = [
-  { k: 'starter', n: 'Para empezar', opt: true },
-  { k: 'curry', n: 'Tu curry', opt: false },
-  { k: 'extra', n: 'Pan o arroz extra', opt: true },
-  { k: 'sweet', n: 'Postre o lassi', opt: true }
+  { k: 'starter', n: 'tf.s1', opt: true },
+  { k: 'curry', n: 'tf.s2', opt: false },
+  { k: 'extra', n: 'tf.s3', opt: true },
+  { k: 'sweet', n: 'tf.s4', opt: true }
 ];
-const NAMES = { 'Korma': (P, p) => `Korma de ${p}`, 'Curry': (P, p) => `Curry de ${p}`, 'Curry con champiñones': (P, p) => `Curry de ${p} con champiñones` };
-const curryList = () => tf.prot === 3 ? VEG.slice() : SAUCES.map((s) => { const P = PROTS[tf.prot], f = NAMES[s.n]; const top = tf.prot === 0 && ['Tikka masala', 'A la mantequilla', 'Curry'].includes(s.n); return { n: f ? f(P, P.toLowerCase()) : `${P} ${s.n.charAt(0).toLowerCase() + s.n.slice(1)}`, d: s.d, p: s.p[tf.prot], c: s.c, t: top ? ['top', ...(s.t || [])] : s.t }; });
-const tagHtml = (t) => (t || []).map((x) => ({ hot: '<span class="tag tag--hot">picante</span>', fire: '<span class="tag tag--fire">muy picante</span>', cream: '<span class="tag tag--cream">cremoso</span>', veg: '<span class="tag tag--veg">vegetariano</span>', top: '<span class="tag tag--top">★ de los más pedidos</span>' })[x]).join('');
+// cada opción guarda su clave en castellano (k) y se pinta traducida
+const loc = (o) => ({ ...o, k: o.n, n: tr(o.n), d: tr(o.d) });
+const fill = (tpl, i) => { const c = cfg(), P = c.prots[i], p = c.lower[i]; return tpl.replace('{P}', P).replace('{de}', /^[aeiouhéèàâ]/i.test(p) ? 'd’' : 'de ').replace('{p}', p); };
+const curryList = () => tf.prot === 3 ? VEG.map(loc) : SAUCES.map((s) => {
+  const top = tf.prot === 0 && ['Tikka masala', 'A la mantequilla', 'Curry'].includes(s.n);
+  return { k: tf.prot + '|' + s.n, n: fill(cfg().sauces[s.n][1], tf.prot), d: tr(s.d), p: s.p[tf.prot], c: s.c, t: top ? ['top', ...(s.t || [])] : s.t };
+});
+const LISTS = { starter: () => STARTERS.map(loc), curry: curryList, extra: () => [...BREADS, ...RICES].map(loc), sweet: () => SWEETS.map(loc) };
+const sel = (k) => tf[k] ? LISTS[k]().find((o) => o.k === tf[k]) || null : null;
+const sideName = (lower) => t((tf.side === 'naan' ? 'tf.naan' : 'tf.rice') + (lower ? 'L' : ''));
+const tagHtml = (x) => (x || []).map((k) => `<span class="tag tag--${k}">${t('tag.' + k)}</span>`).join('');
 const stepsEl = $('#tfSteps'), panelEl = $('#tfPanel');
-const stepVal = (k) => k === 'curry' ? (tf.curry ? tf.curry.n : 'Elige uno') : (tf[k] ? tf[k].n : 'Opcional');
+const stepVal = (k) => { const o = sel(k); return o ? o.n : t(k === 'curry' ? 'tf.pick' : 'tf.optional'); };
 const paintSteps = () => {
-  stepsEl.innerHTML = STEPS.map((s, i) => `<li><button class="step${tf.step === i ? ' is-on' : ''}${(s.k === 'curry' ? tf.curry : tf[s.k]) ? ' is-set' : ''}" type="button" role="tab" aria-selected="${tf.step === i}" data-i="${i}"><small>Piso ${i + 1}</small><span>${s.n}</span><em>${stepVal(s.k)}</em></button></li>`).join('');
+  stepsEl.innerHTML = STEPS.map((s, i) => `<li><button class="step${tf.step === i ? ' is-on' : ''}${tf[s.k] ? ' is-set' : ''}" type="button" role="tab" aria-selected="${tf.step === i}" data-i="${i}"><small>${t('tf.floor', { n: i + 1 })}</small><span>${t(s.n)}</span><em>${stepVal(s.k)}</em></button></li>`).join('');
   $$('.step', stepsEl).forEach((b) => b.addEventListener('click', () => { tf.step = +b.dataset.i; paintSteps(); paintPanel(); }));
 };
-const optHtml = (o, on) => `<button class="opt${on ? ' is-on' : ''}" type="button" aria-pressed="${on}"><span class="opt__dot" style="background:${o.c || '#E8CB93'}"></span><b>${o.n}</b><span class="opt__p">${eur(o.p)}</span><span class="opt__d">${o.d}</span>${o.t ? `<span class="opt__tags">${tagHtml(o.t)}</span>` : ''}</button>`;
-const paintPanel = () => {
-  const s = STEPS[tf.step];
-  let html = '', list = [];
-  if (s.k === 'starter') { list = STARTERS; html = `<p class="panel__q">¿Algo para abrir boca?</p><p class="panel__hint">Entrantes y sopas. Puedes saltarte este piso.</p>`; }
+const optHtml = (o, on) => `<button class="opt${on ? ' is-on' : ''}" type="button" aria-pressed="${on}"><span class="opt__dot" style="background:${o.c || '#E8CB93'}"></span><b>${o.n}</b><span class="opt__p">${eur(o.p)}</span>${o.d ? `<span class="opt__d">${o.d}</span>` : ''}${o.t ? `<span class="opt__tags">${tagHtml(o.t)}</span>` : ''}</button>`;
+const paintPanel = (quiet) => {
+  const s = STEPS[tf.step], list = LISTS[s.k]();
+  let html = '';
+  if (s.k === 'starter') html = `<p class="panel__q">${t('tf.q1')}</p><p class="panel__hint">${t('tf.h1')}</p>`;
   if (s.k === 'curry') {
-    list = curryList();
-    html = `<p class="panel__q">El piso principal: tu curry</p><p class="panel__hint">Incluye arroz o naan. Elige primero la base.</p>
-      <div class="seg" id="segProt">${[...PROTS, 'Vegetariano'].map((p, i) => `<button type="button" class="${tf.prot === i ? 'is-on' : ''}" data-i="${i}">${p}</button>`).join('')}</div>
-      <div class="seg" id="segSide"><span class="panel__hint" style="align-self:center">Incluido:</span>${['Arroz basmati', 'Naan'].map((x) => `<button type="button" class="${tf.side === x ? 'is-on' : ''}" data-v="${x}">${x}</button>`).join('')}</div>`;
+    html = `<p class="panel__q">${t('tf.q2')}</p><p class="panel__hint">${t('tf.h2')}</p>
+      <div class="seg" id="segProt">${[...cfg().prots, t('tf.veg')].map((p, i) => `<button type="button" class="${tf.prot === i ? 'is-on' : ''}" aria-pressed="${tf.prot === i}" data-i="${i}">${p}</button>`).join('')}</div>
+      <div class="seg" id="segSide"><span class="panel__hint" style="align-self:center">${t('tf.included')}</span>${['rice', 'naan'].map((x) => `<button type="button" class="${tf.side === x ? 'is-on' : ''}" aria-pressed="${tf.side === x}" data-v="${x}">${t(x === 'naan' ? 'tf.naan' : 'tf.rice')}</button>`).join('')}</div>`;
   }
-  if (s.k === 'extra') { list = [...BREADS, ...RICES]; html = `<p class="panel__q">¿Más naan o un arroz especial?</p><p class="panel__hint">Recién salido del tandoor.</p>`; }
-  if (s.k === 'sweet') { list = SWEETS; html = `<p class="panel__q">Para terminar</p><p class="panel__hint">Lassi de yogur, kulfi o halwa.</p>`; }
-  const cur = s.k === 'curry' ? tf.curry : tf[s.k];
-  html += `<div class="opts">${list.map((o) => optHtml(o, cur && cur.n === o.n)).join('')}</div>`;
-  html += `<div class="panel__foot">${s.opt ? `<button class="skip" type="button" id="tfSkip">${cur ? 'Quitar este piso' : 'Saltar este piso'}</button>` : '<span></span>'}${tf.step < 3 ? `<button class="btn btn--saffron btn--sm" type="button" id="tfNext"><span>Siguiente piso</span><i class="ph-bold ph-arrow-right"></i></button>` : ''}</div>`;
+  if (s.k === 'extra') html = `<p class="panel__q">${t('tf.q3')}</p><p class="panel__hint">${t('tf.h3')}</p>`;
+  if (s.k === 'sweet') html = `<p class="panel__q">${t('tf.q4')}</p><p class="panel__hint">${t('tf.h4')}</p>`;
+  html += `<div class="opts">${list.map((o) => optHtml(o, tf[s.k] === o.k)).join('')}</div>`;
+  html += `<div class="panel__foot">${s.opt ? `<button class="skip" type="button" id="tfSkip">${t(tf[s.k] ? 'tf.remove' : 'tf.skip')}</button>` : '<span></span>'}${tf.step < 3 ? `<button class="btn btn--saffron btn--sm" type="button" id="tfNext"><span>${t('tf.next')}</span><i class="ph-bold ph-arrow-right"></i></button>` : ''}</div>`;
   panelEl.innerHTML = html;
   $$('.opt', panelEl).forEach((b, i) => b.addEventListener('click', () => {
     const o = list[i];
-    if (s.k === 'curry') tf.curry = (tf.curry && tf.curry.n === o.n) ? null : o;
-    else tf[s.k] = (tf[s.k] && tf[s.k].n === o.n) ? null : o;
+    tf[s.k] = tf[s.k] === o.k ? null : o.k;
     paintSteps(); paintPanel(); paintTin(); paintBill();
   }));
   const sp = $('#segProt'); if (sp) $$('button', sp).forEach((b) => b.addEventListener('click', () => {
@@ -331,7 +341,7 @@ const paintPanel = () => {
   const ss = $('#segSide'); if (ss) $$('button', ss).forEach((b) => b.addEventListener('click', () => { tf.side = b.dataset.v; paintPanel(); paintTin(); paintBill(); }));
   const sk = $('#tfSkip'); if (sk) sk.addEventListener('click', () => { tf[s.k] = null; if (tf.step < 3) tf.step++; paintSteps(); paintPanel(); paintTin(); paintBill(); });
   const nx = $('#tfNext'); if (nx) nx.addEventListener('click', () => { tf.step++; paintSteps(); paintPanel(); });
-  if (motion) gsap.from($$('.opt', panelEl), { y: 14, opacity: 0, duration: .4, stagger: .015, ease: 'power2.out' });
+  if (motion && !quiet) gsap.from($$('.opt', panelEl), { y: 14, opacity: 0, duration: .4, stagger: .015, ease: 'power2.out' });
 };
 
 // el tiffin de acero, dibujado en SVG
@@ -348,11 +358,11 @@ const tierSvg = (t, i, y) => `
     <ellipse cx="160" cy="10" rx="110" ry="14" fill="url(#rim)" stroke="#7D8794" stroke-width="1"/>
   </g>`;
 const paintTin = () => {
-  const tiers = [];
-  if (tf.starter) tiers.push({ key: 's-' + tf.starter.n, n: tf.starter.n, sub: 'Para empezar · ' + eur(tf.starter.p), c: tf.starter.c });
-  if (tf.curry) tiers.push({ key: 'c-' + tf.curry.n + tf.side, n: tf.curry.n, sub: 'con ' + tf.side.toLowerCase() + ' · ' + eur(tf.curry.p), c: tf.curry.c });
-  if (tf.extra) tiers.push({ key: 'e-' + tf.extra.n, n: tf.extra.n, sub: 'Extra · ' + eur(tf.extra.p), c: tf.extra.c });
-  if (tf.sweet) tiers.push({ key: 'd-' + tf.sweet.n, n: tf.sweet.n, sub: 'Para terminar · ' + eur(tf.sweet.p), c: tf.sweet.c });
+  const tiers = [], st = sel('starter'), cu = sel('curry'), ex = sel('extra'), sw = sel('sweet');
+  if (st) tiers.push({ key: 's-' + st.k, n: st.n, sub: t('tf.subStart') + ' · ' + eur(st.p), c: st.c });
+  if (cu) tiers.push({ key: 'c-' + cu.k + tf.side, n: cu.n, sub: t('tf.subWith', { side: sideName(true) }) + ' · ' + eur(cu.p), c: cu.c });
+  if (ex) tiers.push({ key: 'e-' + ex.k, n: ex.n, sub: t('tf.subExtra') + ' · ' + eur(ex.p), c: ex.c });
+  if (sw) tiers.push({ key: 'd-' + sw.k, n: sw.n, sub: t('tf.subEnd') + ' · ' + eur(sw.p), c: sw.c });
   const base = 470, th = 66, top = base - Math.max(tiers.length, 1) * th;
   let body = '';
   if (!tiers.length) for (let i = 0; i < 4; i++) body += `<g transform="translate(0 ${base - (i + 1) * th})"><rect x="50" y="10" width="220" height="62" rx="2" fill="none" stroke="rgba(255,245,228,.25)" stroke-dasharray="6 6"/><ellipse cx="160" cy="10" rx="110" ry="14" fill="none" stroke="rgba(255,245,228,.25)" stroke-dasharray="6 6"/></g>`;
@@ -387,56 +397,60 @@ const paintTin = () => {
 };
 const billEl = $('#billList'), totalEl = $('#billTotal');
 const lines = () => {
-  const l = [];
-  if (tf.starter) l.push([tf.starter.n, tf.starter.p]);
-  if (tf.curry) l.push([`${tf.curry.n} (con ${tf.side.toLowerCase()})`, tf.curry.p]);
-  if (tf.extra) l.push([tf.extra.n, tf.extra.p]);
-  if (tf.sweet) l.push([tf.sweet.n, tf.sweet.p]);
+  const l = [], st = sel('starter'), cu = sel('curry'), ex = sel('extra'), sw = sel('sweet');
+  if (st) l.push([st.n, st.p]);
+  if (cu) l.push([t('tf.line', { dish: cu.n, side: sideName(true) }), cu.p]);
+  if (ex) l.push([ex.n, ex.p]);
+  if (sw) l.push([sw.n, sw.p]);
   return l;
 };
-const paintBill = () => {
+const paintBill = (quiet) => {
   const l = lines(), tot = l.reduce((a, [, p]) => a + p, 0);
-  billEl.innerHTML = l.length ? l.map(([n, p]) => `<li><span>${n}</span><span>${eur(p)}</span></li>`).join('') : '<li class="empty">Tu tiffin está vacío: empieza por el curry</li>';
-  if (motion && tot) gsap.fromTo(totalEl, { scale: 1.15 }, { scale: 1, duration: .4, ease: 'back.out(3)' });
+  billEl.innerHTML = l.length ? l.map(([n, p]) => `<li><span>${n}</span><span>${eur(p)}</span></li>`).join('') : `<li class="empty">${t('tf.empty')}</li>`;
+  if (motion && tot && !quiet) gsap.fromTo(totalEl, { scale: 1.15 }, { scale: 1, duration: .4, ease: 'back.out(3)' });
   totalEl.textContent = eur(tot);
 };
 const toast = $('#toast');
 const say = (t) => { toast.textContent = t; toast.hidden = false; clearTimeout(say.t); say.t = setTimeout(() => { toast.hidden = true; }, 2600); };
 $('#billCopy').addEventListener('click', async () => {
-  const l = lines(); if (!l.length) { say('Primero elige algo para tu tiffin'); return; }
-  const txt = `Hola, quiero pedir:\n${l.map(([n, p]) => `· ${n} — ${eur(p)}`).join('\n')}\nTotal aprox.: ${eur(l.reduce((a, [, p]) => a + p, 0))}`;
-  try { await navigator.clipboard.writeText(txt); say('Pedido copiado: llama al 631 46 04 19'); }
-  catch (e) { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); say('Pedido copiado'); } catch (er) { say('No se ha podido copiar'); } ta.remove(); }
+  const l = lines(); if (!l.length) { say(t('tf.first')); return; }
+  const txt = `${t('tf.msgHi')}\n${l.map(([n, p]) => `· ${n} — ${eur(p)}`).join('\n')}\n${t('tf.msgTotal')} ${eur(l.reduce((a, [, p]) => a + p, 0))}`;
+  try { await navigator.clipboard.writeText(txt); say(t('tf.copied')); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); say(t('tf.copiedShort')); } catch (er) { say(t('tf.copyFail')); } ta.remove(); }
 });
-tf.step = 1; tf.curry = curryList()[0]; shownTiers = ['c-' + tf.curry.n + tf.side]; paintSteps(); paintPanel(); paintTin(); paintBill();
+tf.step = 1; tf.curry = curryList()[0].k; shownTiers = ['c-' + tf.curry + tf.side]; paintSteps(); paintPanel(); paintTin(); paintBill();
 
 /* ----------------------------------------------------------
    LA CARTA
    ---------------------------------------------------------- */
-const dishes = (arr) => arr.map((o) => `<div class="dish"><b>${o.n}</b><span class="p">${eur(o.p)}</span>${o.d ? `<span class="d">${o.d}</span>` : ''}${o.t ? `<span class="tags">${tagHtml(o.t)}</span>` : ''}</div>`).join('');
+const dishes = (arr) => arr.map(loc).map((o) => `<div class="dish"><b>${o.n}</b><span class="p">${eur(o.p)}</span>${o.d ? `<span class="d">${o.d}</span>` : ''}${o.t ? `<span class="tags">${tagHtml(o.t)}</span>` : ''}</div>`).join('');
+const sub = (k) => `<h3 class="sub">${t(k)}</h3>`;
 const TABS = [
-  ['Curris', () => `<div class="matrix-wrap"><table class="matrix"><thead><tr><th>Salsa</th>${PROTS.map((p) => `<th class="p">${p}</th>`).join('')}</tr></thead><tbody>${SAUCES.map((s) => `<tr><td><span class="n">${s.n}</span>${s.t ? `<span class="tags">${tagHtml(s.t)}</span>` : ''}<span class="d">${s.d}</span></td>${s.p.map((p) => `<td class="p">${eur(p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
-    <div class="cols" style="margin-top:50px"><h3 class="sub">Vegetarianos</h3>${dishes(VEG)}</div>`],
-  ['Tandoor y biryani', () => `<div class="cols"><h3 class="sub">Del tandoor</h3>${dishes(TANDOOR)}<h3 class="sub">Biryani</h3>${dishes(BIRYANI)}</div>`],
-  ['Entrantes y sopas', () => `<div class="cols"><h3 class="sub">Entrantes y sopas</h3>${dishes(STARTERS)}<h3 class="sub">Ensaladas</h3>${dishes(SALADS)}</div>`],
-  ['Panes y arroces', () => `<div class="cols"><h3 class="sub">Panes del tandoor</h3>${dishes(BREADS)}<h3 class="sub">Arroces</h3>${dishes(RICES)}<h3 class="sub">Encurtidos</h3>${dishes(PICKLES)}</div>`],
-  ['Postres y bebidas', () => `<div class="cols"><h3 class="sub">Postres y lassi</h3>${dishes(SWEETS)}<h3 class="sub">Para beber</h3>${dishes(DRINKS)}</div>`],
-  ['Pizzas, pastas y más', () => `<div class="cols">${MORE.map((g) => `<h3 class="sub">${g.h}</h3>${g.items.map(([n, p]) => `<div class="dish"><b>${n}</b><span class="p">${eur(p)}</span></div>`).join('')}`).join('')}</div>`]
+  ['carta.t1', () => `<div class="matrix-wrap"><table class="matrix"><thead><tr><th>${t('carta.sauce')}</th>${cfg().prots.map((p) => `<th class="p">${p}</th>`).join('')}</tr></thead><tbody>${SAUCES.map((s) => `<tr><td><span class="n">${cfg().sauces[s.n][0]}</span>${s.t ? `<span class="tags">${tagHtml(s.t)}</span>` : ''}<span class="d">${tr(s.d)}</span></td>${s.p.map((p) => `<td class="p">${eur(p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    <div class="cols" style="margin-top:50px">${sub('carta.vegs')}${dishes(VEG)}</div>`],
+  ['carta.t2', () => `<div class="cols">${sub('carta.tandoor')}${dishes(TANDOOR)}${sub('carta.biryani')}${dishes(BIRYANI)}</div>`],
+  ['carta.t3', () => `<div class="cols">${sub('carta.starters')}${dishes(STARTERS)}${sub('carta.salads')}${dishes(SALADS)}</div>`],
+  ['carta.t4', () => `<div class="cols">${sub('carta.breads')}${dishes(BREADS)}${sub('carta.rices')}${dishes(RICES)}${sub('carta.pickles')}${dishes(PICKLES)}</div>`],
+  ['carta.t5', () => `<div class="cols">${sub('carta.sweets')}${dishes(SWEETS)}${sub('carta.drinks')}${dishes(DRINKS)}</div>`],
+  ['carta.t6', () => `<div class="cols">${MORE.map((g) => `<h3 class="sub">${tr(g.h)}</h3>${g.items.map(([n, p]) => `<div class="dish"><b>${tr(n)}</b><span class="p">${eur(p)}</span></div>`).join('')}`).join('')}</div>`]
 ];
 const tabsEl = $('#cartaTabs'), cartaBody = $('#cartaBody');
-const showTab = (i) => {
-  $$('.tab', tabsEl).forEach((t, k) => { t.classList.toggle('is-on', k === i); t.setAttribute('aria-selected', k === i); });
-  cartaBody.innerHTML = TABS[i][1]() + '<p class="carta__note">Carta y precios de su tienda en Glovo (octubre de 2026). En el local pueden variar; pregunta por alérgenos al hacer tu pedido.</p>';
-  if (motion) gsap.from(cartaBody.querySelectorAll('tr, .dish, .sub'), { y: 16, opacity: 0, duration: .45, stagger: .012, ease: 'power2.out' });
+let curTab = 0;
+const showTab = (i, quiet) => {
+  curTab = i;
+  $$('.tab', tabsEl).forEach((b, k) => { b.classList.toggle('is-on', k === i); b.setAttribute('aria-selected', k === i); });
+  cartaBody.innerHTML = TABS[i][1]() + `<p class="carta__note">${t('carta.note')}</p>`;
+  if (motion && !quiet) gsap.from(cartaBody.querySelectorAll('tr, .dish, .sub'), { y: 16, opacity: 0, duration: .45, stagger: .012, ease: 'power2.out' });
 };
-TABS.forEach(([n], i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tab'; b.setAttribute('role', 'tab'); b.textContent = n; b.addEventListener('click', () => showTab(i)); tabsEl.appendChild(b); });
+TABS.forEach(([k], i) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'tab'; b.setAttribute('role', 'tab'); b.dataset.k = k; b.textContent = t(k); b.addEventListener('click', () => showTab(i)); tabsEl.appendChild(b); });
 showTab(0);
-$('#pitaList').innerHTML = PITA.map(([n, p]) => `<li><span>${n}</span><b>${eur(p)}</b></li>`).join('');
+const paintPita = () => { $('#pitaList').innerHTML = PITA.map(([n, p]) => `<li><span>${tr(n)}</span><b>${eur(p)}</b></li>`).join(''); };
+paintPita();
 
 /* ----------------------------------------------------------
    GALERÍA DE ARCOS
    ---------------------------------------------------------- */
-const IG = 'Instagram @royal_curry_pita_king', GG = 'Foto de cliente · Google';
+const IG = 'fotos.ig', GG = 'fotos.gg';
 const PHOTOS = [
   ['tikka-sizzler.jpg', 'Pollo tikka en plancha de hierro', GG],
   ['mesa-curries.jpg', 'Curris, arroz y naan', GG],
@@ -456,7 +470,7 @@ const PHOTOS = [
 const gal = $('#gallery'), galCap = $('#galCap'), galSrc = $('#galSrc');
 PHOTOS.forEach(([f, c, s], i) => {
   const el = document.createElement('figure'); el.className = 'gal';
-  el.innerHTML = `<button type="button" aria-label="Ver foto: ${c}"><div class="arch"><img src="${IMG(f)}" alt="${c}" loading="lazy" draggable="false"></div></button>`;
+  el.innerHTML = `<button type="button" aria-label="${t('fotos.view', { c: tr(c) })}"><div class="arch"><img src="${IMG(f)}" alt="${tr(c)}" loading="lazy" draggable="false"></div></button>`;
   $('button', el).addEventListener('click', () => { if (galDrag.moved) return; if (i === galCur) openLb(i); else centerOn(i); });
   gal.appendChild(el);
 });
@@ -468,7 +482,7 @@ const paintGal = () => {
   gals.forEach((g, i) => { const c = g.offsetLeft + g.offsetWidth / 2, d = Math.abs(c - mid); if (d < bd) { bd = d; best = i; } });
   if (best === galCur) return; galCur = best;
   gals.forEach((g, i) => g.classList.toggle('is-center', i === best));
-  galCap.textContent = PHOTOS[best][1]; galSrc.textContent = `${String(best + 1).padStart(2, '0')} / ${PHOTOS.length} · ${PHOTOS[best][2]}`;
+  galCap.textContent = tr(PHOTOS[best][1]); galSrc.textContent = `${String(best + 1).padStart(2, '0')} / ${PHOTOS.length} · ${t(PHOTOS[best][2])}`;
 };
 let gRaf = 0; gal.addEventListener('scroll', () => { if (!gRaf) gRaf = requestAnimationFrame(() => { gRaf = 0; paintGal(); }); }, { passive: true });
 $('#galPrev').addEventListener('click', () => centerOn(galCur - 1));
@@ -486,7 +500,7 @@ addEventListener('resize', () => centerOn(Math.max(galCur, 0), true));
    VISOR
    ---------------------------------------------------------- */
 const lb = $('#lb'), lbImg = $('#lbImg');
-function openLb(i) { lbImg.src = IMG(PHOTOS[i][0]); lbImg.alt = PHOTOS[i][1]; $('#lbCap').textContent = PHOTOS[i][1]; lb.hidden = false; lock(true); $('.lb__close').focus(); }
+function openLb(i) { lbImg.src = IMG(PHOTOS[i][0]); lbImg.alt = tr(PHOTOS[i][1]); $('#lbCap').textContent = tr(PHOTOS[i][1]); lb.hidden = false; lock(true); $('.lb__close').focus(); }
 const closeLb = () => { lb.hidden = true; lock(false); };
 $('.lb__close').addEventListener('click', closeLb);
 lb.addEventListener('click', (e) => { if (e.target === lb) closeLb(); });
@@ -503,4 +517,18 @@ if (motion) {
   gsap.from('.foot__big', { y: 60, opacity: 0, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.foot', start: 'top 90%', once: true } });
 }
 addEventListener('load', () => { if (hasGSAP) ScrollTrigger.refresh(); });
+
+/* ----------------------------------------------------------
+   CAMBIO DE IDIOMA · se repinta todo lo que genera este archivo
+   ---------------------------------------------------------- */
+document.addEventListener('rck:lang', () => {
+  paintLive();
+  paintSteps(); paintPanel(true); paintTin(); paintBill(true);
+  $$('.tab', tabsEl).forEach((b) => { b.textContent = t(b.dataset.k); });
+  showTab(curTab, true); paintPita();
+  gals.forEach((g, i) => { const c = tr(PHOTOS[i][1]); $('button', g).setAttribute('aria-label', t('fotos.view', { c })); $('img', g).alt = c; });
+  galCur = -1; paintGal();
+  if (!lb.hidden) { const i = PHOTOS.findIndex((p) => lbImg.src.endsWith(p[0])); if (i > -1) { lbImg.alt = tr(PHOTOS[i][1]); $('#lbCap').textContent = tr(PHOTOS[i][1]); } }
+  if (hasGSAP) ScrollTrigger.refresh();
+});
 })();

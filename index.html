@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Royal Curry King · Restaurante indio · Lloret de Mar</title>
-<meta name="description" content="Royal Curry King & Pita King: cocina india y halal en el Carrer de Miguel de Cervantes, 9 de Lloret de Mar. Curris, tandoor, biryani, naan, pitas y dürüm. Abierto todos los días de 10:30 a 1:00. 4,8 en Google con 160 reseñas. Tel. 631 46 04 19.">
+<title data-i18n="meta.title">Royal Curry King · Restaurante indio · Lloret de Mar</title>
+<meta name="description" data-i18n-attr="content:meta.desc" content="Royal Curry King & Pita King: cocina india y halal en el Carrer de Miguel de Cervantes, 9 de Lloret de Mar. Curris, tandoor, biryani, naan, pitas y dürüm. Abierto todos los días de 10:30 a 1:00. 4,8 en Google con 160 reseñas. Tel. 631 46 04 19.">
 <meta name="theme-color" content="#13213D">
 <meta property="og:title" content="Royal Curry King · Lloret de Mar">
 <meta property="og:description" content="Curry, tandoor y naan en el centro de Lloret. 100% halal. Todos los días de 10:30 a 1:00.">
@@ -30,28 +30,29 @@
   <svg class="mandala" id="mandala" viewBox="-200 -200 400 400"></svg>
   <div class="intro__name">
     <svg class="intro__crown"><use href="#crown"/></svg>
-    <p class="intro__hi">स्वागत है · Bienvenidos</p>
+    <p class="intro__hi" data-i18n="intro.hi">स्वागत है · Bienvenidos</p>
     <p class="intro__t">Royal Curry King</p>
   </div>
 </div>
 
 <!-- ============ NAV ============ -->
 <header class="nav" id="nav">
-  <a class="brand" href="#top" aria-label="Royal Curry King, inicio">
+  <a class="brand" href="#top" aria-label="Royal Curry King, inicio" data-i18n-attr="aria-label:nav.home">
     <svg class="brand__crown"><use href="#crown"/></svg>
     <span>Royal Curry King<small>&amp; Pita King · Lloret</small></span>
   </a>
-  <nav class="nav__links" id="navLinks" aria-label="Principal">
-    <a href="#tiffin">Tu tiffin</a>
-    <a href="#carta">La carta</a>
-    <a href="#pita">Pita King</a>
-    <a href="#arcos">Fotos</a>
-    <a href="#visita">Visítanos</a>
+  <nav class="nav__links" id="navLinks" aria-label="Principal" data-i18n-attr="aria-label:nav.main">
+    <a href="#tiffin" data-i18n="nav.tiffin">Tu tiffin</a>
+    <a href="#carta" data-i18n="nav.carta">La carta</a>
+    <a href="#pita" data-i18n="nav.pita">Pita King</a>
+    <a href="#arcos" data-i18n="nav.fotos">Fotos</a>
+    <a href="#visita" data-i18n="nav.visita">Visítanos</a>
   </nav>
   <div class="nav__end">
     <span class="live" data-live><i></i><span data-live-text>Horario</span></span>
+    <div class="lang" data-lang-switch></div>
     <a class="btn btn--saffron btn--sm" href="tel:+34631460419"><i class="ph-bold ph-phone"></i><span>631 46 04 19</span></a>
-    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Menú"><span></span><span></span></button>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Menú" data-i18n-attr="aria-label:nav.menu"><span></span><span></span></button>
   </div>
 </header>
 
@@ -61,58 +62,58 @@
   <section class="hero">
     <canvas class="spices" id="spices" aria-hidden="true"></canvas>
     <div class="hero__copy">
-      <p class="hero__k"><span class="halal">100% Halal</span><span>Carrer de Miguel de Cervantes, 9 · Lloret de Mar</span></p>
+      <p class="hero__k"><span class="halal" data-i18n="hero.halal">100% Halal</span><span>Carrer de Miguel de Cervantes, 9 · Lloret de Mar</span></p>
       <h1 class="hero__title">
         <svg class="hero__crown" aria-hidden="true"><use href="#crown"/></svg>
         <span class="l1">Royal</span>
         <span class="l2">Curry King</span>
       </h1>
-      <p class="hero__lead">Curry, tandoor y naan recién hecho en el centro de Lloret. Comida casera, <em>texturas suaves y sabores intensos</em>, todos los días de 10:30 a 1:00.</p>
+      <p class="hero__lead" data-i18n="hero.lead">Curry, tandoor y naan recién hecho en el centro de Lloret. Comida casera, <em>texturas suaves y sabores intensos</em>, todos los días de 10:30 a 1:00.</p>
       <div class="hero__cta">
-        <a class="btn btn--saffron" href="#tiffin"><i class="ph-bold ph-stack"></i><span>Monta tu tiffin</span></a>
-        <a class="btn btn--line" href="#carta"><i class="ph-bold ph-book-open"></i><span>Ver la carta</span></a>
+        <a class="btn btn--saffron" href="#tiffin"><i class="ph-bold ph-stack"></i><span data-i18n="hero.cta1">Monta tu tiffin</span></a>
+        <a class="btn btn--line" href="#carta"><i class="ph-bold ph-book-open"></i><span data-i18n="hero.cta2">Ver la carta</span></a>
       </div>
-      <p class="hero__score"><b>4,8</b><span class="stars">★★★★★</span><span>160 reseñas en Google</span></p>
+      <p class="hero__score"><b>4,8</b><span class="stars">★★★★★</span><span data-i18n="hero.reviews">160 reseñas en Google</span></p>
     </div>
     <div class="hero__arch">
       <div class="arch arch--hero">
-        <video src="assets/video/sala.mp4" poster="assets/img/v-sala.jpg" autoplay muted loop playsinline preload="auto" aria-label="El comedor del restaurante, con sus arcos iluminados"></video>
+        <video src="assets/video/sala.mp4" poster="assets/img/v-sala.jpg" autoplay muted loop playsinline preload="auto" aria-label="El comedor del restaurante, con sus arcos iluminados" data-i18n-attr="aria-label:hero.video"></video>
       </div>
       <svg class="hero__ring" id="heroRing" viewBox="-200 -200 400 400" aria-hidden="true"></svg>
-      <p class="hero__archcap">El comedor · los arcos</p>
+      <p class="hero__archcap" data-i18n="hero.cap">El comedor · los arcos</p>
     </div>
   </section>
 
   <!-- ============ CINTA ============ -->
   <div class="band" aria-hidden="true">
     <div class="band__track">
-      <span>Pollo tikka masala</span><b>✺</b><span>Biryani</span><b>✺</b><span>Naan del tandoor</span><b>✺</b><span>Korma</span><b>✺</b><span>Samosas</span><b>✺</b><span>Mango lassi</span><b>✺</b><span>Pitas y dürüm</span><b>✺</b>
-      <span>Pollo tikka masala</span><b>✺</b><span>Biryani</span><b>✺</b><span>Naan del tandoor</span><b>✺</b><span>Korma</span><b>✺</b><span>Samosas</span><b>✺</b><span>Mango lassi</span><b>✺</b><span>Pitas y dürüm</span><b>✺</b>
+      <span data-i18n="band.1">Pollo tikka masala</span><b>✺</b><span data-i18n="band.2">Biryani</span><b>✺</b><span data-i18n="band.3">Naan del tandoor</span><b>✺</b><span data-i18n="band.4">Korma</span><b>✺</b><span data-i18n="band.5">Samosas</span><b>✺</b><span data-i18n="band.6">Mango lassi</span><b>✺</b><span data-i18n="band.7">Pitas y dürüm</span><b>✺</b>
+      <span data-i18n="band.1">Pollo tikka masala</span><b>✺</b><span data-i18n="band.2">Biryani</span><b>✺</b><span data-i18n="band.3">Naan del tandoor</span><b>✺</b><span data-i18n="band.4">Korma</span><b>✺</b><span data-i18n="band.5">Samosas</span><b>✺</b><span data-i18n="band.6">Mango lassi</span><b>✺</b><span data-i18n="band.7">Pitas y dürüm</span><b>✺</b>
     </div>
   </div>
 
   <!-- ============ TIFFIN ============ -->
   <section class="sec tiffin" id="tiffin">
     <header class="head">
-      <p class="eyebrow"><span class="dev">टिफ़िन</span> Interactivo</p>
-      <h2 class="h2">Monta tu <span>tiffin</span></h2>
-      <p class="lead">La fiambrera de acero de la India, piso a piso. Elige tu curry y lo que lo acompaña, y te sumamos la cuenta con los precios de la carta.</p>
+      <p class="eyebrow"><span class="dev">टिफ़िन</span> <span data-i18n="tf.eyebrow">Interactivo</span></p>
+      <h2 class="h2" data-i18n="tf.title">Monta tu <span>tiffin</span></h2>
+      <p class="lead" data-i18n="tf.lead">La fiambrera de acero de la India, piso a piso. Elige tu curry y lo que lo acompaña, y te sumamos la cuenta con los precios de la carta.</p>
     </header>
     <div class="tiffin__grid">
       <div class="builder">
-        <ol class="steps" id="tfSteps" role="tablist" aria-label="Pisos del tiffin"></ol>
+        <ol class="steps" id="tfSteps" role="tablist" aria-label="Pisos del tiffin" data-i18n-attr="aria-label:tf.steps"></ol>
         <div class="panel" id="tfPanel" aria-live="polite"></div>
       </div>
       <div class="tiffin__stage">
-        <svg class="tin" id="tin" viewBox="0 0 320 520" aria-label="Tu tiffin" role="img"></svg>
+        <svg class="tin" id="tin" viewBox="0 0 320 520" aria-label="Tu tiffin" data-i18n-attr="aria-label:tf.tin" role="img"></svg>
         <div class="bill" id="bill">
           <ul class="bill__list" id="billList"></ul>
-          <p class="bill__total"><span>Total</span><b id="billTotal">0,00 €</b></p>
+          <p class="bill__total"><span data-i18n="tf.total">Total</span><b id="billTotal">0,00 €</b></p>
           <div class="bill__cta">
-            <a class="btn btn--saffron btn--sm" href="tel:+34631460419"><i class="ph-bold ph-phone"></i><span>Pedir por teléfono</span></a>
-            <button class="btn btn--line btn--sm" id="billCopy" type="button"><i class="ph-bold ph-copy"></i><span>Copiar pedido</span></button>
+            <a class="btn btn--saffron btn--sm" href="tel:+34631460419"><i class="ph-bold ph-phone"></i><span data-i18n="tf.call">Pedir por teléfono</span></a>
+            <button class="btn btn--line btn--sm" id="billCopy" type="button"><i class="ph-bold ph-copy"></i><span data-i18n="tf.copy">Copiar pedido</span></button>
           </div>
-          <p class="bill__note">Precios de su carta a domicilio en Glovo (octubre de 2026); en el local pueden variar.</p>
+          <p class="bill__note" data-i18n="tf.note">Precios de su carta a domicilio en Glovo (octubre de 2026); en el local pueden variar.</p>
         </div>
       </div>
     </div>
@@ -122,93 +123,115 @@
   <section class="sec carta" id="carta">
     <header class="head head--row">
       <div>
-        <p class="eyebrow"><span class="dev">मेन्यू</span> La carta</p>
-        <h2 class="h2">De la <span>cocina</span> al tandoor</h2>
+        <p class="eyebrow"><span class="dev">मेन्यू</span> <span data-i18n="carta.eyebrow">La carta</span></p>
+        <h2 class="h2" data-i18n="carta.title">De la <span>cocina</span> al tandoor</h2>
       </div>
-      <p class="lead">Todos los curris y platos principales incluyen arroz o naan. <span class="tag tag--hot">picante</span> <span class="tag tag--fire">muy picante</span> <span class="tag tag--cream">cremoso</span></p>
+      <p class="lead" data-i18n="carta.lead">Todos los curris y platos principales incluyen arroz o naan. <span class="tag tag--hot">picante</span> <span class="tag tag--fire">muy picante</span> <span class="tag tag--cream">cremoso</span></p>
     </header>
-    <div class="tabs" id="cartaTabs" role="tablist" aria-label="Secciones de la carta"></div>
+    <div class="tabs" id="cartaTabs" role="tablist" aria-label="Secciones de la carta" data-i18n-attr="aria-label:carta.tabs"></div>
     <div class="carta__body" id="cartaBody"></div>
   </section>
 
   <!-- ============ PITA KING ============ -->
   <section class="sec pita" id="pita">
     <div class="pita__copy">
-      <p class="eyebrow">Y en la misma casa</p>
+      <p class="eyebrow" data-i18n="pita.eyebrow">Y en la misma casa</p>
       <h2 class="h2">Pita <span>King</span></h2>
-      <p class="lead">Pitas, dürüm, kapsalon y platos de kebab o falafel para comer a cualquier hora. Pollo, ternera o mixto, con su salsa.</p>
+      <p class="lead" data-i18n="pita.lead">Pitas, dürüm, kapsalon y platos de kebab o falafel para comer a cualquier hora. Pollo, ternera o mixto, con su salsa.</p>
       <ul class="pita__list" id="pitaList"></ul>
     </div>
     <figure class="pita__board">
-      <img src="assets/img/pizarra-pita.jpg" alt="Panel de fotos del menú Pita King: ensaladas, dürüm, pitas, platos de kebab y falafel, kapsalon, patatas y menús" loading="lazy">
-      <figcaption>El panel del mostrador · Instagram @royal_curry_pita_king</figcaption>
+      <img src="assets/img/pizarra-pita.jpg" data-i18n-attr="alt:pita.alt" alt="Panel de fotos del menú Pita King: ensaladas, dürüm, pitas, platos de kebab y falafel, kapsalon, patatas y menús" loading="lazy">
+      <figcaption data-i18n="pita.cap">El panel del mostrador · Instagram @royal_curry_pita_king</figcaption>
     </figure>
   </section>
 
   <!-- ============ ARCOS · carrusel ============ -->
   <section class="sec arcos" id="arcos">
     <header class="head head--center">
-      <p class="eyebrow"><span class="dev">तस्वीरें</span> Fotos</p>
-      <h2 class="h2">Bajo los <span>arcos</span></h2>
-      <p class="lead">Platos, sala y clientes: fotos de nuestro Instagram y de las que suben los clientes a Google.</p>
+      <p class="eyebrow"><span class="dev">तस्वीरें</span> <span data-i18n="fotos.eyebrow">Fotos</span></p>
+      <h2 class="h2" data-i18n="fotos.title">Bajo los <span>arcos</span></h2>
+      <p class="lead" data-i18n="fotos.lead">Platos, sala y clientes: fotos de nuestro Instagram y de las que suben los clientes a Google.</p>
     </header>
-    <div class="gallery" id="gallery" tabindex="0" aria-label="Galería de fotos, desplázate en horizontal"></div>
+    <div class="gallery" id="gallery" tabindex="0" aria-label="Galería de fotos, desplázate en horizontal" data-i18n-attr="aria-label:fotos.gallery"></div>
     <div class="gallery__ui">
-      <button class="round" id="galPrev" type="button" aria-label="Foto anterior"><i class="ph-bold ph-arrow-left"></i></button>
+      <button class="round" id="galPrev" type="button" aria-label="Foto anterior" data-i18n-attr="aria-label:fotos.prev"><i class="ph-bold ph-arrow-left"></i></button>
       <p class="gallery__cap"><b id="galCap">—</b><span id="galSrc"></span></p>
-      <button class="round" id="galNext" type="button" aria-label="Foto siguiente"><i class="ph-bold ph-arrow-right"></i></button>
+      <button class="round" id="galNext" type="button" aria-label="Foto siguiente" data-i18n-attr="aria-label:fotos.next"><i class="ph-bold ph-arrow-right"></i></button>
     </div>
   </section>
 
   <!-- ============ RESEÑAS ============ -->
   <section class="sec revs">
-    <p class="revs__score"><b>4,8</b><span class="stars">★★★★★</span><span>160 reseñas en Google</span></p>
+    <p class="revs__score"><b>4,8</b><span class="stars">★★★★★</span><span data-i18n="hero.reviews">160 reseñas en Google</span></p>
     <div class="revs__grid">
-      <blockquote><p>«Aquí todo fue exquisito, la comida casera, texturas suaves con sabores intensos. El trato fue inmejorable, amables y muy atentos. Además, el precio económico.»</p><cite>Reseña en Google</cite></blockquote>
-      <blockquote><p>«Probamos pollo tikka masala, channa masala, saag paneer y arroz al limón: todos estaban realmente deliciosos y bien elaborados.»</p><cite>Pedido a domicilio · Google</cite></blockquote>
-      <blockquote><p>«El pan naan y el pollo korma están muy buenos.»</p><cite>Reseña en Google</cite></blockquote>
+      <blockquote><p data-i18n="revs.1">«Aquí todo fue exquisito, la comida casera, texturas suaves con sabores intensos. El trato fue inmejorable, amables y muy atentos. Además, el precio económico.»</p><cite data-i18n="revs.cite">Reseña en Google</cite></blockquote>
+      <blockquote><p data-i18n="revs.2">«Probamos pollo tikka masala, channa masala, saag paneer y arroz al limón: todos estaban realmente deliciosos y bien elaborados.»</p><cite data-i18n="revs.cite2">Pedido a domicilio · Google</cite></blockquote>
+      <blockquote><p data-i18n="revs.3">«El pan naan y el pollo korma están muy buenos.»</p><cite data-i18n="revs.cite">Reseña en Google</cite></blockquote>
     </div>
   </section>
 
   <!-- ============ VISITA ============ -->
   <section class="sec visita" id="visita">
     <div class="visita__copy">
-      <p class="eyebrow"><span class="dev">पता</span> Visítanos</p>
+      <p class="eyebrow"><span class="dev">पता</span> <span data-i18n="visita.eyebrow">Visítanos</span></p>
       <h2 class="h2">Cervantes, <span>9</span></h2>
       <ul class="facts">
-        <li><i class="ph-bold ph-clock"></i><div><b>Todos los días</b><span>10:30 – 1:00</span></div></li>
+        <li><i class="ph-bold ph-clock"></i><div><b data-i18n="visita.days">Todos los días</b><span>10:30 – 1:00</span></div></li>
         <li><i class="ph-bold ph-map-pin"></i><div><b>Carrer de Miguel de Cervantes, 9</b><span>17310 Lloret de Mar (Girona)</span></div></li>
-        <li><i class="ph-bold ph-phone"></i><div><b><a href="tel:+34631460419">631 46 04 19</a></b><span>Reservas y pedidos para llevar</span></div></li>
-        <li><i class="ph-bold ph-moped"></i><div><b><a href="https://glovoapp.com/es/es/lloret-de-mar/stores/royal-curry-king-ldm" target="_blank" rel="noopener">A domicilio en Glovo</a></b><span>Lloret de Mar</span></div></li>
+        <li><i class="ph-bold ph-phone"></i><div><b><a href="tel:+34631460419">631 46 04 19</a></b><span data-i18n="visita.phone">Reservas y pedidos para llevar</span></div></li>
+        <li><i class="ph-bold ph-moped"></i><div><b><a href="https://glovoapp.com/es/es/lloret-de-mar/stores/royal-curry-king-ldm" target="_blank" rel="noopener" data-i18n="visita.glovo">A domicilio en Glovo</a></b><span>Lloret de Mar</span></div></li>
       </ul>
       <span class="live live--big" data-live><i></i><span data-live-text>Horario</span></span>
     </div>
     <div class="visita__pics">
-      <div class="arch arch--sm"><img src="assets/img/fachada-carta.jpg" alt="Fachada de Royal Curry King con el panel de platos en la calle Cervantes" loading="lazy"></div>
-      <div class="visita__map"><iframe title="Mapa: Royal Curry King, Carrer de Miguel de Cervantes 9, Lloret de Mar" src="https://maps.google.com/maps?q=Royal%20Curry%20King%2C%20Carrer%20de%20Miguel%20de%20Cervantes%209%2C%20Lloret%20de%20Mar&z=17&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+      <div class="arch arch--sm"><img src="assets/img/fachada-carta.jpg" data-i18n-attr="alt:visita.alt" alt="Fachada de Royal Curry King con el panel de platos en la calle Cervantes" loading="lazy"></div>
+      <div class="visita__map mapbox">
+        <iframe title="Mapa: Royal Curry King, Carrer de Miguel de Cervantes 9, Lloret de Mar" data-i18n-attr="title:visita.map" data-consent-src="https://maps.google.com/maps?q=Royal%20Curry%20King%2C%20Carrer%20de%20Miguel%20de%20Cervantes%209%2C%20Lloret%20de%20Mar&z=17&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="mapbox__off">
+          <i class="ph-bold ph-map-trifold" aria-hidden="true"></i>
+          <p data-i18n="map.off">El mapa de Google Maps está desactivado porque instala cookies de Google.</p>
+          <button class="btn btn--saffron btn--sm" type="button" data-map-on><i class="ph-bold ph-map-pin"></i><span data-i18n="map.on">Mostrar el mapa</span></button>
+          <a class="mapbox__link" href="https://www.google.com/maps/search/?api=1&amp;query=Royal%20Curry%20King%2C%20Carrer%20de%20Miguel%20de%20Cervantes%209%2C%20Lloret%20de%20Mar" target="_blank" rel="noopener"><span data-i18n="map.open">Abrir en Google Maps</span> ↗</a>
+        </div>
+      </div>
     </div>
   </section>
 
 </main>
 
 <footer class="foot">
-  <p class="foot__big"><span class="dev">धन्यवाद</span> Gracias</p>
+  <p class="foot__big"><span class="dev">धन्यवाद</span> <span data-i18n="foot.thanks">Gracias</span></p>
   <div class="foot__row">
     <span>Royal Curry King &amp; Pita King · Carrer de Miguel de Cervantes, 9 · Lloret de Mar · 631 46 04 19</span>
-    <span>Fotos: Instagram @royal_curry_pita_king y clientes en Google · Carta y precios: Glovo</span>
+    <span data-i18n="foot.credits">Fotos: Instagram @royal_curry_pita_king y clientes en Google · Carta y precios: Glovo</span>
   </div>
+  <div class="foot__legal">
+    <nav class="foot__links" aria-label="Información legal" data-i18n-attr="aria-label:foot.legal">
+      <a href="terminos/" data-i18n="legal.terms">Términos</a>
+      <a href="privacidad/" data-i18n="legal.privacy">Privacidad</a>
+      <a href="cookies/" data-i18n="legal.cookies">Política de cookies</a>
+      <a href="accesibilidad/" data-i18n="legal.a11y">Accesibilidad</a>
+      <button type="button" data-cookie-settings data-i18n="legal.settings">Configuración de cookies</button>
+    </nav>
+    <div class="foot__langs" data-lang-list></div>
+  </div>
+  <p class="foot__copy">© 2026 Royal Curry King &amp; Pita King · Lloret de Mar</p>
 </footer>
 
 <!-- visor -->
-<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Foto ampliada" data-i18n-attr="aria-label:lb.label" hidden>
   <figure class="lb__fig"><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
-  <button class="lb__close" type="button" aria-label="Cerrar"><i class="ph-bold ph-x"></i></button>
+  <button class="lb__close" type="button" aria-label="Cerrar" data-i18n-attr="aria-label:lb.close"><i class="ph-bold ph-x"></i></button>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="i18n/ui.js"></script>
+<script src="i18n/carta.js"></script>
+<script src="site.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
